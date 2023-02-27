@@ -1,7 +1,7 @@
 #![warn(clippy::all, clippy::pedantic)]
 use std::{
     thread,
-    time::{self, Duration},
+    time::{self, Duration}, process::exit,
 };
 extern crate ncurses;
 use ncurses::*;
@@ -88,6 +88,11 @@ fn main() {
         }
         if !paused && d != DIRECTION::PAUSED {
             previous_direction = d;
+            if board.snake.contains(&p) {
+                clear();
+                refresh();
+                exit(1);
+            }
             if board.foods.contains(&p) {
                 board.foods.retain(|&x| x != p);
                 board.snake.insert(0, p);
